@@ -169,12 +169,8 @@ def main():
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN environment variable is not set!")
 
-    app = (
-        Application.builder()
-        .token(token)
-        .post_init(post_init)
-        .build()
-    )
+    app = Application.builder().token(token).build()
+    app.post_init = post_init
 
     app.add_handler(CommandHandler("start",   start))
     app.add_handler(CommandHandler("help",    help_command))
