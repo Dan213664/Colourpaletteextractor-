@@ -157,6 +157,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def post_init(application: Application):
+    await application.bot.delete_webhook(drop_pending_updates=True)
     await application.bot.set_my_commands([
         BotCommand("start",   "Welcome message"),
         BotCommand("palette", "Set number of colors to extract (1–10)"),
@@ -169,8 +170,12 @@ def main():
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN environment variable is not set!")
 
-    app = Application.builder().token(token).build()
-    app.post_init = post_init
+    app = (
+        Application.builder()
+        .token(token)
+        .post_init(post_init)
+        .build()
+    )
 
     app.add_handler(CommandHandler("start",   start))
     app.add_handler(CommandHandler("help",    help_command))
